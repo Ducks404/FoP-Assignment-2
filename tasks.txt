@@ -1,0 +1,11 @@
+THINGS TO DO:
+
+- Register an event (1 Person)
+- Delete an event (1 Person)
+- Update events (1 Person)
+- Manage attendees (2 Person)
+- Print event (1 Person)
+- File access (1 Person)
+
+SUGGESTION:
+- Selecting events
