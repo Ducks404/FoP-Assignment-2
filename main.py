@@ -6,7 +6,7 @@ def selectEvent(database):
 
 # Register a new event
 def registerEvent(database):
-    pass
+    return database
 
 # Update existing event
 def updateEvent(database):
@@ -25,6 +25,16 @@ def printSchedule(database):
     pass
 
 while True:
+    # Read data from database
+    database = []
+    with open('database.txt', 'r') as file:
+        content = file.readlines()
+    for event in content:
+        event = event.strip('\n')
+        event = event.split(', ')
+        event = event[:5] + [event[5:]]
+        database.append(event)
+    
     print('''
         Event Management System
                 Menu
@@ -36,16 +46,34 @@ while True:
     6. Exit''')
     choice = input('Enter choice: ')
     if choice == '1':
-        registerEvent(database)
+        database = registerEvent(database)
     elif choice == '2':
-        updateEvent(database)
+        database = updateEvent(database)
     elif choice == '3':
-        deleteEvent(database)
+        database = deleteEvent(database)
     elif choice == '4':
-        manageAttendees(database)
+        database = manageAttendees(database)
     elif choice == '5':
         printSchedule(database)
     elif choice =='6':
         break
     else:
         print('Error: Invalid choice')
+    database = [database[0]]
+
+    # Converts to format of database
+    databaseString = ''
+    for event in database:
+        eventString = ''
+        for item in event[:-1]:
+            eventString += item + ', '
+        attendees = event[-1]
+        for person in attendees:
+            eventString += person + ', '
+        eventString = eventString.strip(', ') + '\n'
+
+        databaseString += eventString
+
+    # Writes to database
+    with open('database.txt','w') as file:
+        file.write(databaseString)
