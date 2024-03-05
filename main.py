@@ -1,27 +1,27 @@
 
 
 # Prompts user to select an event
-def selectEvent():
+def selectEvent(database):
     pass
 
 # Register a new event
-def registerEvent():
+def registerEvent(database):
     pass
 
 # Update existing event
-def updateEvent():
+def updateEvent(database):
     pass
 
 # Delete existing event
-def deleteEvent():
+def deleteEvent(database):
     pass
 
 # Manage attendees menu
-def manageAttendees():
+def manageAttendees(database):
     pass
 
 # Prints event schedule:
-def printSchedule():
+def printSchedule(database):
     pass
 
 while True:
@@ -36,15 +36,15 @@ while True:
     6. Exit''')
     choice = input('Enter choice: ')
     if choice == '1':
-        registerEvent()
+        registerEvent(database)
     elif choice == '2':
-        updateEvent()
+        updateEvent(database)
     elif choice == '3':
-        deleteEvent()
+        deleteEvent(database)
     elif choice == '4':
-        manageAttendees()
+        manageAttendees(database)
     elif choice == '5':
-        printSchedule()
+        printSchedule(database)
     elif choice =='6':
         break
     else:

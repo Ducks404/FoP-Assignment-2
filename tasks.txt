@@ -1,11 +1,18 @@
 THINGS TO DO:
 
-- Register an event (1 Person)
-- Delete an event (1 Person)
-- Update events (1 Person)
-- Manage attendees (2 Person)
-- Print event (1 Person)
-- File access (1 Person)
+INPUT of functions:
+- The Database, an Array with format [[event1],[event2]]
+- Inside [event], [name,desc,location,date,time,[attendee]]
+- Inside [attendee], [name1,name2] (Only Shahjalal should care)
+
+- Register an event (Justin): return the database
+- Delete an event (Ahmed): return the database
+- Search for an event (Ahmed): return the event index
+- Update events (Dan): return the database
+- Manage attendees (Shahjalal): return the database
+- Print event (Jeremy): return void
+- File access & making everything one thing (Dewa): 
 
 SUGGESTION:
-- Selecting events
+- Calendar, will do if have extra time
+- Github
