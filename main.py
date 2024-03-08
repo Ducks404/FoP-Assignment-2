@@ -59,7 +59,9 @@ while True:
         break
     else:
         print('Error: Invalid choice')
-    database = [database[0]]
+
+    # Testing the database
+    # database = [database[0]]
 
     # Converts to format of database
     databaseString = ''
