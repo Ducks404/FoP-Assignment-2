@@ -14,7 +14,8 @@ def updateEvent(database):
 
 # Delete existing event
 def deleteEvent(database):
-    pass
+    print("I know how to use git hub")
+    return database
 
 # Manage attendees menu
 def manageAttendees(database):
