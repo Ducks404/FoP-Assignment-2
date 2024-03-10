@@ -1,3 +1,3 @@
-Math Lecture, Lecture on databases, F3A12, 12/04/24, 11:00, Ahmed, Abood, Charles
-BBQ, Fun barbecue with friends, I4, 12/04/24, 20:00, Ahmed, Justin, Jeremy
-Phone, Phone display, I5, 12/04/12, 10:12, Bob, Adam, Cindy
+Math Lecture, Lecture on databases, F3A12, 12/04/24, 11:00, 13:00, Ahmed, Abood, Charles
+BBQ, Fun barbecue with friends, I4, 12/04/24, 20:00, 22:00, Ahmed, Justin, Jeremy
+Phone, Phone display, I5, 12/04/12, 10:12, 11:00, Bob, Adam, Cindy

@@ -2,7 +2,7 @@ THINGS TO DO:
 
 INPUT of functions:
 - The Database, an Array with format [[event1],[event2]]
-- Inside [event], [name,desc,location,date,time,[attendee]]
+- Inside [event], [name,desc,location,date,start_time,end_time,[attendee]]
 - Inside [attendee], [name1,name2] (Only Shahjalal should care)
 
 - Register an event (Justin): return the database

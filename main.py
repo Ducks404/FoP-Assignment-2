@@ -32,7 +32,7 @@ while True:
     for event in content:
         event = event.strip('\n')
         event = event.split(', ')
-        event = event[:5] + [event[5:]]
+        event = event[:6] + [event[6:]]
         database.append(event)
     
     print('''
