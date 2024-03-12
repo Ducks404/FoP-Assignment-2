@@ -2,7 +2,12 @@
 
 # Prompts user to select an event
 def selectEvent(database):
-    return 0
+    nam=input('What is the name of the event?')
+    for sub_list in database:
+        if nam in sub_list:
+            y= database.index(sub_list)
+            return y
+    print("Event not found!!!")
 
 # Register a new event
 def registerEvent(database):
@@ -219,7 +224,11 @@ def updateEvent(database):
 
 # Delete existing event
 def deleteEvent(database):
-    pass
+    printSchedule(database)
+    delegroup= selectEvent(database)
+    del database[delegroup]
+    print("Event succcessfully deleted :)")
+    return database
 
 # Manage attendees menu
 def manageAttendees(database):
@@ -227,7 +236,11 @@ def manageAttendees(database):
 
 # Prints event schedule:
 def printSchedule(database):
+    print(database)
     pass
+
+
+
 
 while True:
     # Read data from database
