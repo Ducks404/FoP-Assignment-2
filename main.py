@@ -20,6 +20,8 @@ def updateEvent(database):
     loop = True
     while loop:
         print()
+        print("               Event")
+        print("************************************")
         print(f"Event Name       : {database[eventINDEX][0]}")
         print(f"Event Description: {database[eventINDEX][1]}")
         print(f"Event Location   : {database[eventINDEX][2]}")
@@ -65,9 +67,60 @@ def updateEvent(database):
 
             # 4. Event Date    
             elif updateChoice == 4:
-                updateEventDate = input("Enter a new event date: ")
-                database[eventINDEX][3] = updateEventDate
-                print("Event Date updated!")
+                loop_Year = True
+                while loop_Year:
+                    year = input("Enter a new year (last 2 digits only): ")
+                    if year.isdigit():
+                        if 0 < len(year) < 3 and len(year) != 1:
+                                   
+                            year = int(year)
+                            loop_Month = True
+                            while loop_Month:
+                                month = input("Enter a new month: ")
+
+                                if month.isdigit():
+                                    month = int(month)
+                                    x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+                                    if month in x:
+
+                                        loop_Day = True
+                                        while loop_Day:
+                                            day = input("Enter a new day: ")
+
+                                            if day.isdigit():
+                                                day = int(day)
+                                                y = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+                                                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
+                                                    21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 31]
+
+                                                if day in y:
+                                                    updateEventDate = str(day) + "/" + str(month) + "/" + str(year)
+                                                    database[eventINDEX][3] = updateEventDate
+                                                    print("Event Date updated!")
+                                                    loop_Day = False
+
+                                                else:
+                                                    print("Invalid. Try again.") 
+
+                                            else:
+                                                print("Invalid. Try again.")    
+
+                                        loop_Month = False
+
+                                    else:
+                                        print("Invalid. Try again.")
+                                
+                                else:
+                                    print("Invalid. Try again.")
+                            
+                            loop_Year = False
+
+                        else:
+                            print("Only 2 digits. Try again.")
+
+                    else:
+                        print("Invalid. Try again.")
 
             # 5. Event Time
             elif updateChoice == 5:
@@ -86,15 +139,111 @@ def updateEvent(database):
 
                         # 1. Start Time
                         if timeChoice == 1:
-                            updateEventStartTime = input("Enter a new event start time: ")
-                            database[eventINDEX][4] = updateEventStartTime
-                            print("Event Start Time updated!")
+                            loop_StartTime = True
+                            while loop_StartTime:
+                                newStartTime = input("Enter a new event start time (24h format): ")
+                                newStartTime = newStartTime.replace(" ", "")
+                                
+                                if 0 < len(newStartTime) < 6:
+                                    n = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
+                                    try:
+                                        if newStartTime[0] and newStartTime[4] in n:
+                                            try:
+                                                if newStartTime[1] in n:
+                                                    try:
+                                                        if newStartTime[3] in n:
+                                                            try:
+                                                                if newStartTime[4] in n:
+
+                                                                    if newStartTime[2] == ":" or newStartTime[2] == ".":
+                                                                        updateEventStartTime = newStartTime.replace(".", ":")
+                                                                        database[eventINDEX][4] = updateEventStartTime
+                                                                        print("Event Start Time updated!")
+                                                                        loop_StartTime = False
+
+                                                                    else:
+                                                                        print("Invalid format. Try again.")
+
+                                                                else:
+                                                                    print("Numbers only. Try again")
+
+                                                            except:
+                                                                print("Invalid format. Try again.")
+                                                        
+                                                        else:
+                                                            print("Numbers only. Try again")
+
+                                                    except:
+                                                        print("Invalid format. Try again.")
+
+                                                else:
+                                                    print("Numbers only. Try again")
+                                            
+                                            except:
+                                                print("Invalid format. Try again.")
+
+                                        else:
+                                            print("Numbers only. Try again")
+
+                                    except:
+                                        print("Invalid format. Try again.")
+                                else:
+                                    print("Invalid format. Try again.")
                             
                         # 2. End Time
                         elif timeChoice == 2:
-                            updateEventEndTime = input("Enter a new event end time: ")
-                            database[eventINDEX][5] = updateEventEndTime
-                            print("Event End Time updated!")
+                            loop_EndTime = True
+                            while loop_EndTime:
+                                newEndTime = input("Enter a new event start time (24h format): ")
+                                newEndTime = newEndTime.replace(" ", "")
+                                
+                                if 0 < len(newEndTime) < 6:
+                                    n = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
+                                    try:
+                                        if newEndTime[0] and newEndTime[4] in n:
+                                            try:
+                                                if newEndTime[1] in n:
+                                                    try:
+                                                        if newEndTime[3] in n:
+                                                            try:
+                                                                if newEndTime[4] in n:
+
+                                                                    if newEndTime[2] == ":" or newEndTime[2] == ".":
+                                                                        updateEventEndTime = updateEventEndTime.replace(".", ":")
+                                                                        database[eventINDEX][5] = updateEventEndTime
+                                                                        print("Event End Time updated!")
+                                                                        loop_EndTime = False
+
+                                                                    else:
+                                                                        print("Invalid format. Try again.")
+
+                                                                else:
+                                                                    print("Numbers only. Try again")
+
+                                                            except:
+                                                                print("Invalid format. Try again.")
+                                                        
+                                                        else:
+                                                            print("Numbers only. Try again")
+
+                                                    except:
+                                                        print("Invalid format. Try again.")
+
+                                                else:
+                                                    print("Numbers only. Try again")
+                                            
+                                            except:
+                                                print("Invalid format. Try again.")
+
+                                        else:
+                                            print("Numbers only. Try again")
+
+                                    except:
+                                        print("Invalid format. Try again.")
+                                else:
+                                    print("Invalid format. Try again.")
 
                         # 3. Go back
                         elif timeChoice == 3:
