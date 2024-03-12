@@ -5,11 +5,11 @@ def selectEvent(database):
     nam=input('What is the name of the event?')
     for sub_list in database:
         if nam in sub_list:
-            x= sub_list.index(nam)
             y= database.index(sub_list)
-            print(database[y])
-            
+            return y
+    print("Event not found!!!")
     
+
 
 # Register a new event
 def registerEvent(database):
@@ -21,11 +21,10 @@ def updateEvent(database):
 
 # Delete existing event
 def deleteEvent(database):
-    print(database) ;printSchedule()
-    delChoice=int(input('I wanna delete event number(Starting from 0):'))
-    del database[delChoice]
+    printSchedule(database)
+    delegroup= selectEvent(database)
+    del database[delegroup]
     print("Event succcessfully deleted :)")
-    print (database)
     return database
 
 # Manage attendees menu
