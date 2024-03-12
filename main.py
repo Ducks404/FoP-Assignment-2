@@ -2,7 +2,7 @@
 
 # Prompts user to select an event
 def selectEvent(database):
-    pass
+    return 0
 
 # Register a new event
 def registerEvent(database):
@@ -10,6 +10,8 @@ def registerEvent(database):
 
 # Update existing event
 def updateEvent(database):
+
+    eventINDEX = selectEvent(database)
     loop = True
     while loop:
         print()
@@ -212,7 +214,7 @@ def updateEvent(database):
         
         else:
             print("Please try again. Enter digits only.")
-            
+
     return database
 
 # Delete existing event
