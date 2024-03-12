@@ -2,7 +2,14 @@
 
 # Prompts user to select an event
 def selectEvent(database):
-    pass
+    nam=input('What is the name of the event?')
+    for sub_list in database:
+        if nam in sub_list:
+            x= sub_list.index(nam)
+            y= database.index(sub_list)
+            print(database[y])
+            
+    
 
 # Register a new event
 def registerEvent(database):
@@ -14,7 +21,11 @@ def updateEvent(database):
 
 # Delete existing event
 def deleteEvent(database):
-    print("I know how to use git hub")
+    print(database) ;printSchedule()
+    delChoice=int(input('I wanna delete event number(Starting from 0):'))
+    del database[delChoice]
+    print("Event succcessfully deleted :)")
+    print (database)
     return database
 
 # Manage attendees menu
@@ -23,7 +34,11 @@ def manageAttendees(database):
 
 # Prints event schedule:
 def printSchedule(database):
+    print(database)
     pass
+
+
+
 
 while True:
     # Read data from database
