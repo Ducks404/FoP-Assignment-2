@@ -2,7 +2,7 @@
 
 # Prompts user to select an event
 def selectEvent(database):
-    pass
+    return 0
 
 # Register a new event
 def registerEvent(database):
@@ -22,7 +22,17 @@ def manageAttendees(database):
 
 # Prints event schedule:
 def printSchedule(database):
-    pass
+    event = database[selectEvent(database)]
+    print('Name:',event[0])
+    print('Description:',event[1])
+    print('Location:',event [2])
+    print('Date:',event[3])
+    print('StartTime:',event[4])
+    print('EndTime:',event[5])
+    j = ", ".join(event[6])
+    print('Attendee:',j)
+
+    
 
 while True:
     # Read data from database
