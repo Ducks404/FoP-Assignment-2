@@ -8,7 +8,7 @@ def selectEvent(database):
             y= database.index(sub_list)
             return y
     print("Event not found!!!")
-
+    
 # Register a new event
 def registerEvent(database):
     return database
@@ -236,8 +236,16 @@ def manageAttendees(database):
 
 # Prints event schedule:
 def printSchedule(database):
-    print(database)
-    pass
+    event = database[selectEvent(database)]
+    print('Name:',event[0])
+    print('Description:',event[1])
+    print('Location:',event [2])
+    print('Date:',event[3])
+    print('StartTime:',event[4])
+    print('EndTime:',event[5])
+    j = ", ".join(event[6])
+    print('Attendee:',j)
+
 
 
 
