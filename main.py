@@ -232,7 +232,42 @@ def deleteEvent(database):
 
 # Manage attendees menu
 def manageAttendees(database):
-    pass
+     eventIndex = selectEvent(database)
+    attendees = database[eventIndex][6]
+
+    while True:
+        print("\nAttendee Management for:", database[eventIndex][0])
+        print("1. Add Attendee")
+        print("2. Remove Attendee")
+        print("3. Search Attendees")
+        print("4. Mark Attendance")
+        print("5. Export Attendee List")
+        print("6. Back to Main Menu")
+        choice = input("Enter choice: ")
+
+        # ... existing logic for choices 1, 2, and 6 ...
+
+        if choice.isdigit():
+            choice = int(choice)
+
+            if choice == 3:
+                searchAttendees(attendees.copy())  # Pass a copy to avoid modifying original list
+
+            elif choice == 4:
+                markAttendance(attendees)
+
+            elif choice == 5:
+                filename = input("Enter filename for export (e.g., attendees.csv): ")
+                exportAttendees(attendees.copy(), filename)  # Pass a copy to avoid modifying original list
+
+            else:
+                print("Invalid choice. Please try again.")
+
+        else:
+            print("Invalid input. Please enter digits only.")
+
+    database[eventIndex][6] = attendees
+    return database
 
 # Prints event schedule:
 def printSchedule(database):
