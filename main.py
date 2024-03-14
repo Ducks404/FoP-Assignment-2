@@ -87,9 +87,9 @@ def updateEvent(database):
                     # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
                     clashFlag = False
                     for event in range(len(compList)):
-                        compStartHour, compStartMin = map(int, database[event][4].split(":"))
+                        compStartHour, compStartMin = map(int, compList[event][4].split(":"))
                         compStart = compStartHour*60 + compStartMin
-                        compEndHour, compEndMin = map(int, database[event][5].split(":"))
+                        compEndHour, compEndMin = map(int, compList[event][5].split(":"))
                         compEnd = compEndHour*60 + compEndMin
                         if tempList[2:4] == compList[event][2:4] and ((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)):
                             print("Clashing of Location, Date and Time with another existing event.")
@@ -133,9 +133,9 @@ def updateEvent(database):
                         # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
                         clashFlag = False
                         for event in range(len(compList)):
-                            compStartHour, compStartMin = map(int, database[event][4].split(":"))
+                            compStartHour, compStartMin = map(int, compList[event][4].split(":"))
                             compStart = compStartHour*60 + compStartMin
-                            compEndHour, compEndMin = map(int, database[event][5].split(":"))
+                            compEndHour, compEndMin = map(int, compList[event][5].split(":"))
                             compEnd = compEndHour*60 + compEndMin
                             if tempList[2:4] == compList[event][2:4] and ((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)):
                                 print("Clashing of Location, Date and Time with another existing event.")
@@ -197,9 +197,9 @@ def updateEvent(database):
                                     # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
                                     clashFlag = False
                                     for event in range(len(compList)):
-                                        compStartHour, compStartMin = map(int, database[event][4].split(":"))
+                                        compStartHour, compStartMin = map(int, compList[event][4].split(":"))
                                         compStart = compStartHour*60 + compStartMin
-                                        compEndHour, compEndMin = map(int, database[event][5].split(":"))
+                                        compEndHour, compEndMin = map(int, compList[event][5].split(":"))
                                         compEnd = compEndHour*60 + compEndMin
                                         if tempList[2:4] == compList[event][2:4] and ((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)):
                                             print("Clashing of Location, Date and Time with another existing event.")
@@ -245,9 +245,9 @@ def updateEvent(database):
                                     # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
                                     clashFlag = False
                                     for event in range(len(compList)):
-                                        compStartHour, compStartMin = map(int, database[event][4].split(":"))
+                                        compStartHour, compStartMin = map(int, compList[event][4].split(":"))
                                         compStart = compStartHour*60 + compStartMin
-                                        compEndHour, compEndMin = map(int, database[event][5].split(":"))
+                                        compEndHour, compEndMin = map(int, compList[event][5].split(":"))
                                         compEnd = compEndHour*60 + compEndMin
                                         if tempList[2:4] == compList[event][2:4] and ((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)):
                                             print("Clashing of Location, Date and Time with another existing event.")
