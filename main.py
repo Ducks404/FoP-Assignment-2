@@ -234,7 +234,48 @@ def deleteEvent(database):
     del database[delegroup]
     print("Event succcessfully deleted :)")
     return database
+#Bismillah 
+#These work trust trust
+import csv
+#helper function for export,called later
+def exportAttendees(attendees, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Attendee Name"])
+        for attendee in attendees:
+            writer.writerow([attendee])
+    print("Attendee list exported successfully!")
+  #Marking attendees system  
+def markAttendance(attendees):
+    print("List of Attendees:")
+    for i, attendee in enumerate(attendees):
+        print(f"{i+1}. {attendee} ({'Attended' if 'Y' in attendees[i] else 'Not Attended'})")
 
+    attend_choice = input("Enter attendee number to mark attendance (Y/N): ").upper()
+    if attend_choice.isdigit():
+        attend_choice = int(attend_choice) - 1
+        if 0 <= attend_choice < len(attendees):
+            if attendees[attend_choice] == 'Y':
+                attendees[attend_choice] = 'N'
+                print("Attendance unmarked successfully!")
+            else:
+                attendees[attend_choice] = 'Y'
+                print("Attendance marked successfully!")
+        else:
+            print("Invalid attendee number!")
+    else:
+        print("Invalid input. Please enter digits only.")
+#helper function for search        
+def searchAttendees(attendees):
+    search_term = input("Enter attendee name to search: ")
+    search_results = [attendee for attendee in attendees if search_term.lower() in attendee.lower()]
+
+    if search_results:
+        print("Search Results:")
+        for i, attendee in enumerate(search_results):
+            print(f"{i+1}. {attendee}")
+    else:
+        print("No attendees found matching the search term.")
 # Manage attendees menu
 def manageAttendees(database):
      eventIndex = selectEvent(database)
