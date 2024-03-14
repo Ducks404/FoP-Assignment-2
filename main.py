@@ -2,12 +2,16 @@
 
 # Prompts user to select an event
 def selectEvent(database):
-    nam=input('What is the name of the event?')
+    print()
+    for index, event in enumerate(database):
+        print(f'{index+1}. {event[0]}')
+    nam=input('What is the name of the event?\n')
+    print()
     for sub_list in database:
         if nam in sub_list:
             y= database.index(sub_list)
             return y
-    print("Event not found!!!")
+    print("Event not found!!!\n")
     
 # Register a new event
 def registerEvent(database):
@@ -224,8 +228,9 @@ def updateEvent(database):
 
 # Delete existing event
 def deleteEvent(database):
-    printSchedule(database)
     delegroup= selectEvent(database)
+    if delegroup == None:
+        return
     del database[delegroup]
     print("Event succcessfully deleted :)")
     return database
@@ -235,8 +240,11 @@ def manageAttendees(database):
     pass
 
 # Prints event schedule:
-def printSchedule(database):
-    event = database[selectEvent(database)]
+def printEventDetails(database):
+    eventIndex = selectEvent(database)
+    if eventIndex == None:
+        return
+    event = database[eventIndex]
     print('Name:',event[0])
     print('Description:',event[1])
     print('Location:',event [2])
@@ -268,7 +276,7 @@ while True:
     2. Update an existing event
     3. Delete an existing event
     4. Manage attendees for an existing event
-    5. Print event schedule
+    5. Print event details
     6. Exit''')
     choice = input('Enter choice: ')
     if choice == '1':
@@ -280,7 +288,7 @@ while True:
     elif choice == '4':
         database = manageAttendees(database)
     elif choice == '5':
-        printSchedule(database)
+        printEventDetails(database)
     elif choice =='6':
         break
     else:
