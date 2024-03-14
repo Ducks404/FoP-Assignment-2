@@ -279,9 +279,9 @@ def searchAttendees(attendees):
 # Manage attendees menu
 def manageAttendees(database):
      eventIndex = selectEvent(database)
-    attendees = database[eventIndex][6]
+     attendees = database[eventIndex][6]
 
-    while True:
+     while True:
         print("\nAttendee Management for:", database[eventIndex][0])
         print("1. Add Attendee")
         print("2. Remove Attendee")
@@ -312,8 +312,9 @@ def manageAttendees(database):
         else:
             print("Invalid input. Please enter digits only.")
 
-    database[eventIndex][6] = attendees
-    return database
+     database[eventIndex][6] = attendees
+     return database
+
 
 # Prints event schedule:
 def printEventDetails(database):
