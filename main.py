@@ -1,4 +1,4 @@
-
+import re
 
 # Prompts user to select an event
 def selectEvent(database):
@@ -17,6 +17,8 @@ def registerEvent(database):
 def updateEvent(database):
 
     eventINDEX = selectEvent(database)
+    if eventINDEX==None:
+        return database
     loop = True
     while loop:
         print()
@@ -61,69 +63,99 @@ def updateEvent(database):
 
             # 3. Event Location
             elif updateChoice == 3:
-                updateEventLocation = input("Enter a new event location: ")
-                database[eventINDEX][2] = updateEventLocation
-                print("Event Location updated!")
+                loop_Location = True
+                while loop_Location:
+                    updateEventLocation = input("Enter a new event location: ")
+
+                    # To extract, then, copy pasta that one selected "eventINDEX"'s event into this 1st Temporary List (for comparison) and update it based on user input.
+                    tempList = []
+                    tempData = database[eventINDEX]
+                    tempList.extend(tempData)
+                    tempList[2] = updateEventLocation
+
+                    tempStartHour, tempStartMin = map(int, tempList[4].split(":"))
+                    tempStart = tempStartHour*60 + tempStartMin
+                    tempEndHour, tempEndMin = map(int, tempList[5].split(":"))
+                    tempEnd = tempEndHour*60 + tempEndMin
+
+                    # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this 2nd Temporary List (for comparison).
+                    compList = []
+                    compData = database
+                    compList.extend(compData)
+                    del compList[eventINDEX]
+                    
+                    # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
+                    clashFlag = False
+                    for event in range(len(compList)):
+                        compStartHour, compStartMin = map(int, database[event][4].split(":"))
+                        compStart = compStartHour*60 + compStartMin
+                        compEndHour, compEndMin = map(int, database[event][5].split(":"))
+                        compEnd = compEndHour*60 + compEndMin
+                        if tempList[2:4] == compList[event][2:4] and ((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)):
+                            print("Clashing of Location, Date and Time with another existing event.")
+                            print("Try again.")
+                            tempList.clear()
+                            compList.clear()
+                            clashFlag = True
+                            break
+                    if not clashFlag:
+                        tempList.clear()
+                        compList.clear()
+                        database[eventINDEX][2] = updateEventLocation
+                        print(f"Event Location updated to '{updateEventLocation}' !")
+                        loop_Location = False
 
             # 4. Event Date    
             elif updateChoice == 4:
-                loop_Year = True
-                while loop_Year:
-                    year = input("Enter a new year (last 2 digits only): ")
-                    if year.isdigit():
-                        if 0 < len(year) < 3 and len(year) != 1:
-                                   
-                            year = int(year)
-                            loop_Month = True
-                            while loop_Month:
-                                month = input("Enter a new month: ")
-
-                                if month.isdigit():
-                                    month = int(month)
-                                    x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-                                    if month in x:
-
-                                        loop_Day = True
-                                        while loop_Day:
-                                            day = input("Enter a new day: ")
-
-                                            if day.isdigit():
-                                                day = int(day)
-                                                y = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
-                                                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
-                                                    21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 31]
-
-                                                if day in y:
-                                                    updateEventDate = str(day) + "/" + str(month) + "/" + str(year)
-                                                    database[eventINDEX][3] = updateEventDate
-                                                    print("Event Date updated!")
-                                                    loop_Day = False
-
-                                                else:
-                                                    print("Invalid. Try again.") 
-
-                                            else:
-                                                print("Invalid. Try again.")    
-
-                                        loop_Month = False
-
-                                    else:
-                                        print("Invalid. Try again.")
-                                
-                                else:
-                                    print("Invalid. Try again.")
+                loop_Date = True
+                while loop_Date:
+                    updateEventDate = input("Enter a new date (DD/MM/YY): ")
+                    match = re.match(r"^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/([0-9][0-9])$", updateEventDate)
+                    if match:
                             
-                            loop_Year = False
+                        # To extract, then, copy pasta that one selected "eventINDEX"'s event into this 1st Temporary List (for comparison) and update it based on user input.
+                        tempList = []
+                        tempData = database[eventINDEX]
+                        tempList.extend(tempData)
+                        tempList[3] = match.group(0)
 
-                        else:
-                            print("Only 2 digits. Try again.")
+                        tempStartHour, tempStartMin = map(int, tempList[4].split(":"))
+                        tempStart = tempStartHour*60 + tempStartMin
+                        tempEndHour, tempEndMin = map(int, tempList[5].split(":"))
+                        tempEnd = tempEndHour*60 + tempEndMin
 
+                        # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this 2nd Temporary List (for comparison).
+                        compList = []
+                        compData = database
+                        compList.extend(compData)
+                        del compList[eventINDEX]
+                        
+                        # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
+                        clashFlag = False
+                        for event in range(len(compList)):
+                            compStartHour, compStartMin = map(int, database[event][4].split(":"))
+                            compStart = compStartHour*60 + compStartMin
+                            compEndHour, compEndMin = map(int, database[event][5].split(":"))
+                            compEnd = compEndHour*60 + compEndMin
+                            if tempList[2:4] == compList[event][2:4] and ((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)):
+                                print("Clashing of Location, Date and Time with another existing event.")
+                                print("Try again.")
+                                tempList.clear()
+                                compList.clear()
+                                clashFlag = True
+                                break
+                        if not clashFlag:
+                            tempList.clear()
+                            compList.clear()
+                            database[eventINDEX][3] = match.group(0)
+                            print(f"Event Date updated to '{match.group(0)}' !")
+                            loop_Date = False
                     else:
-                        print("Invalid. Try again.")
+                        print("Invalid Date. Please use the format DD/MM/YY")
 
             # 5. Event Time
             elif updateChoice == 5:
+                
                 loop_Time = True
                 while loop_Time:
                     print()
@@ -141,109 +173,97 @@ def updateEvent(database):
                         if timeChoice == 1:
                             loop_StartTime = True
                             while loop_StartTime:
-                                newStartTime = input("Enter a new event start time (24h format): ")
-                                newStartTime = newStartTime.replace(" ", "")
-                                
-                                if 0 < len(newStartTime) < 6:
-                                    n = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+                                updateEventStartTime = input("Enter a new start time (HH:MM): ")
+                                match = re.match(r"^(0[0-9]|1[0-9]|2[0-3])\:([0-5][0-9])$", updateEventStartTime)
+                                if match:
 
-                                    try:
-                                        if newStartTime[0] and newStartTime[4] in n:
-                                            try:
-                                                if newStartTime[1] in n:
-                                                    try:
-                                                        if newStartTime[3] in n:
-                                                            try:
-                                                                if newStartTime[4] in n:
+                                    # To extract, then, copy pasta that one selected "eventINDEX"'s event into this 1st Temporary List (for comparison) and update it based on user input.
+                                    tempList = []
+                                    tempData = database[eventINDEX]
+                                    tempList.extend(tempData)
+                                    tempList[4] = match.group(0)
 
-                                                                    if newStartTime[2] == ":" or newStartTime[2] == ".":
-                                                                        updateEventStartTime = newStartTime.replace(".", ":")
-                                                                        database[eventINDEX][4] = updateEventStartTime
-                                                                        print("Event Start Time updated!")
-                                                                        loop_StartTime = False
+                                    tempStartHour, tempStartMin = map(int, tempList[4].split(":"))
+                                    tempStart = tempStartHour*60 + tempStartMin
+                                    tempEndHour, tempEndMin = map(int, tempList[5].split(":"))
+                                    tempEnd = tempEndHour*60 + tempEndMin
 
-                                                                    else:
-                                                                        print("Invalid format. Try again.")
-
-                                                                else:
-                                                                    print("Numbers only. Try again")
-
-                                                            except:
-                                                                print("Invalid format. Try again.")
-                                                        
-                                                        else:
-                                                            print("Numbers only. Try again")
-
-                                                    except:
-                                                        print("Invalid format. Try again.")
-
-                                                else:
-                                                    print("Numbers only. Try again")
-                                            
-                                            except:
-                                                print("Invalid format. Try again.")
-
-                                        else:
-                                            print("Numbers only. Try again")
-
-                                    except:
-                                        print("Invalid format. Try again.")
+                                    # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this 2nd Temporary List (for comparison).
+                                    compList = []
+                                    compData = database
+                                    compList.extend(compData)
+                                    del compList[eventINDEX]
+                                    
+                                    # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
+                                    clashFlag = False
+                                    for event in range(len(compList)):
+                                        compStartHour, compStartMin = map(int, database[event][4].split(":"))
+                                        compStart = compStartHour*60 + compStartMin
+                                        compEndHour, compEndMin = map(int, database[event][5].split(":"))
+                                        compEnd = compEndHour*60 + compEndMin
+                                        if tempList[2:4] == compList[event][2:4] and ((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)):
+                                            print("Clashing of Location, Date and Time with another existing event.")
+                                            print("Try again.")
+                                            tempList.clear()
+                                            compList.clear()
+                                            clashFlag = True
+                                            break
+                                    if not clashFlag:
+                                        tempList.clear()
+                                        compList.clear()
+                                        database[eventINDEX][4] = match.group(0)
+                                        print(f"Event Start Time updated to '{match.group(0)}' !")
+                                        loop_StartTime = False
                                 else:
-                                    print("Invalid format. Try again.")
+                                    print("Invalid Time format. Please use the format HH:MM")
                             
                         # 2. End Time
                         elif timeChoice == 2:
                             loop_EndTime = True
                             while loop_EndTime:
-                                newEndTime = input("Enter a new event start time (24h format): ")
-                                newEndTime = newEndTime.replace(" ", "")
-                                
-                                if 0 < len(newEndTime) < 6:
-                                    n = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+                                updateEventEndTime = input("Enter a new end time (HH:MM): ")
+                                match = re.match(r"^(0[0-9]|1[0-9]|2[0-3])\:([0-5][0-9])$", updateEventEndTime)
+                                if match:
 
-                                    try:
-                                        if newEndTime[0] and newEndTime[4] in n:
-                                            try:
-                                                if newEndTime[1] in n:
-                                                    try:
-                                                        if newEndTime[3] in n:
-                                                            try:
-                                                                if newEndTime[4] in n:
+                                    # To extract, then, copy pasta that one selected "eventINDEX"'s event into this 1st Temporary List (for comparison) and update it based on user input.
+                                    tempList = []
+                                    tempData = database[eventINDEX]
+                                    tempList.extend(tempData)
+                                    tempList[5] = match.group(0)
 
-                                                                    if newEndTime[2] == ":" or newEndTime[2] == ".":
-                                                                        updateEventEndTime = updateEventEndTime.replace(".", ":")
-                                                                        database[eventINDEX][5] = updateEventEndTime
-                                                                        print("Event End Time updated!")
-                                                                        loop_EndTime = False
+                                    tempStartHour, tempStartMin = map(int, tempList[4].split(":"))
+                                    tempStart = tempStartHour*60 + tempStartMin
+                                    tempEndHour, tempEndMin = map(int, tempList[5].split(":"))
+                                    tempEnd = tempEndHour*60 + tempEndMin
 
-                                                                    else:
-                                                                        print("Invalid format. Try again.")
-
-                                                                else:
-                                                                    print("Numbers only. Try again")
-
-                                                            except:
-                                                                print("Invalid format. Try again.")
-                                                        
-                                                        else:
-                                                            print("Numbers only. Try again")
-
-                                                    except:
-                                                        print("Invalid format. Try again.")
-
-                                                else:
-                                                    print("Numbers only. Try again")
-                                            
-                                            except:
-                                                print("Invalid format. Try again.")
-
-                                        else:
-                                            print("Numbers only. Try again")
-
-                                    except:
-                                        print("Invalid format. Try again.")
+                                    # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this 2nd Temporary List (for comparison).
+                                    compList = []
+                                    compData = database
+                                    compList.extend(compData)
+                                    del compList[eventINDEX]
+                                    
+                                    # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
+                                    clashFlag = False
+                                    for event in range(len(compList)):
+                                        compStartHour, compStartMin = map(int, database[event][4].split(":"))
+                                        compStart = compStartHour*60 + compStartMin
+                                        compEndHour, compEndMin = map(int, database[event][5].split(":"))
+                                        compEnd = compEndHour*60 + compEndMin
+                                        if tempList[2:4] == compList[event][2:4] and ((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)):
+                                            print("Clashing of Location, Date and Time with another existing event.")
+                                            print("Try again.")
+                                            tempList.clear()
+                                            compList.clear()
+                                            clashFlag = True
+                                            break
+                                    if not clashFlag:
+                                        tempList.clear()
+                                        compList.clear()
+                                        database[eventINDEX][5] = match.group(0)
+                                        print(f"Event End Time updated to '{match.group(0)}' !")
+                                        loop_EndTime = False
                                 else:
-                                    print("Invalid format. Try again.")
+                                    print("Invalid Time format. Please use the format HH:MM")
 
                         # 3. Go back
                         elif timeChoice == 3:
@@ -253,7 +273,7 @@ def updateEvent(database):
                             print("Please try again.")
                     
                     else:
-                        print("Try again. Choose 1 or 2 only.")
+                        print("Try again. Choose 1, 2 or 3 only.")
 
             # 6. Event Attendee's Name
             elif updateChoice == 6:
@@ -273,7 +293,7 @@ def updateEvent(database):
                     print(" 3. Change Attendee's Name")
                     print(" 4. Go back")
                     print()
-                    updateEventAttendeeName =input("What to do?: ")
+                    updateEventAttendeeName =input("Your choice: ")
 
                     if updateEventAttendeeName.isdigit():
                         updateEventAttendeeName = int(updateEventAttendeeName)
@@ -356,13 +376,11 @@ def updateEvent(database):
                     else:
                         print("Invalid options. Please try again.")
 
-                print(database[eventINDEX])
-
             # 7. Back to Main Menu
             elif updateChoice == 7:
                 print("Back to Main Menu......")
                 loop = False
-            
+
             else:
                 print("Enter valid options only. Try again.")
         
