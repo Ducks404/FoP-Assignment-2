@@ -142,29 +142,55 @@ def exportAttendees(attendees, filename):
             writer.writerow([attendee])
     print("Attendee list exported successfully!")
 
-# STILL NOT FUNCTIONING CORRECTLY
 #Marking attendees system  
-def markAttendance(attendees):
+#updated logic to test
+def mark_attendance(attendees):
+    """
+    Marks attendance for attendees in a list.
+
+    Args:
+        attendees (list): A list of dictionaries containing attendee information.
+            Each dictionary should have 'name' (string) and 'status' (string) keys.
+
+    Returns:
+        tuple: A tuple containing two elements:
+            1. Updated attendees list (list): The original list with attendance statuses updated.
+            2. Marked attendees list (list): A list of names of attendees whose attendance was marked.
+    """
+
+    if not attendees:
+        print("There are no attendees in the list.")
+        return attendees, []  # Return empty list for marked attendees
+
     print("List of Attendees:")
     for i, attendee in enumerate(attendees):
-        print(f"{i+1}. {attendee} ({'Attended' if 'Y' in attendees[i] else 'Not Attended'})")
+        status = 'Attended' if attendee['status'].upper() == 'Y' else 'Not Attended'
+        print(f"{i+1}. {attendee['name']} ({status})")
 
-    attend_choice = input("Enter attendee number to mark attendance (Y/N): ").upper()
-    if attend_choice.isdigit():
-        attend_choice = int(attend_choice) - 1
-        if 0 <= attend_choice < len(attendees):
-            if attendees[attend_choice] == 'Y':
-                attendees[attend_choice] = 'N'
-                print("Attendance unmarked successfully!")
-            else:
-                attendees[attend_choice] = 'Y'
-                print("Attendance marked successfully!")
-        else:
-            print("Invalid attendee number!")
-    else:
-        print("Invalid input. Please enter digits only.")
-    return attendees
+    marked_attendees = []
+    while True:
+        name_to_mark = input("Enter attendee name to mark attendance (or 'q' to quit): ").strip()
+        if name_to_mark.lower() == 'q':
+            break
 
+        for attendee in attendees:
+            if attendee['name'].lower() == name_to_mark.lower():
+                if attendee['status'].upper() != 'Y':
+                    attendee['status'] = 'Y'
+                    marked_attendees.append(attendee['name'])
+                    print(f"Attendance for {attendee['name']} has been marked successfully!")
+                else:
+                    print(f"{attendee['name']} is already marked as attended.")
+                break
+        else:  # This else corresponds to the for loop
+            print(f"Attendee '{name_to_mark}' not found. Please try again or enter 'q' to quit.")
+
+    print("Updated List of Attendees:")
+    for i, attendee in enumerate(attendees):
+        status = 'Attended' if attendee['status'].upper() == 'Y' else 'Not Attended'
+        print(f"{i+1}. {attendee['name']} ({status})")
+
+    return attendees, marked_attendees
 #helper function for search        
 def searchAttendees(attendees):
     search_term = input("Enter attendee name to search: ")
