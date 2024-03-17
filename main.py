@@ -89,7 +89,7 @@ def updateEvent(database):
                         compStart = compStartHour*60 + compStartMin
                         compEndHour, compEndMin = map(int, compList[event][5].split(":"))
                         compEnd = compEndHour*60 + compEndMin
-                        if tempList[2:4] == compList[event][2:4] and (((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)) or (compStart <= (tempStart and tempEnd) <= compEnd)):
+                        if tempList[2:4] == compList[event][2:4] and ((tempStart < compStart < tempEnd) or (compStart < tempStart < compEnd) or (tempStart == compStart)):
                             print("Clashing of Location, Date and Time with another existing event.")
                             print("Try again.")
                             tempList.clear()
@@ -133,7 +133,7 @@ def updateEvent(database):
                             compStart = compStartHour*60 + compStartMin
                             compEndHour, compEndMin = map(int, compList[event][5].split(":"))
                             compEnd = compEndHour*60 + compEndMin
-                            if tempList[2:4] == compList[event][2:4] and (((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)) or (compStart <= (tempStart and tempEnd) <= compEnd)):
+                            if tempList[2:4] == compList[event][2:4] and ((tempStart < compStart < tempEnd) or (compStart < tempStart < compEnd) or (tempStart == compStart)):
                                 print("Clashing of Location, Date and Time with another existing event.")
                                 print("Try again.")
                                 tempList.clear()
@@ -219,7 +219,7 @@ def updateEvent(database):
                                 compStart = compStartHour*60 + compStartMin
                                 compEndHour, compEndMin = map(int, compList[event][5].split(":"))
                                 compEnd = compEndHour*60 + compEndMin
-                                if tempList[2:4] == compList[event][2:4] and (((tempStart <= compEnd < tempEnd) or (tempStart < compStart <= tempEnd)) or (compStart <= (tempStart and tempEnd) <= compEnd) or (tempStart <= (compStart and compEnd) <= tempEnd)):
+                                if tempList[2:4] == compList[event][2:4] and ((tempStart < compStart < tempEnd) or (compStart < tempStart < compEnd) or (tempStart == compStart)):
                                     print("Clashing of Location, Date and Time with another existing event.")
                                     print("Try again.")
                                     tempList.clear()
@@ -227,12 +227,17 @@ def updateEvent(database):
                                     clashFlag = True
                                     break
                             if not clashFlag:
-                                database[eventINDEX][4] = tempList[4]
-                                database[eventINDEX][5] = tempList[5]
+                                if tempEnd <= tempStart:
+                                    print("Invalid. End Time must come after Start Time.")
+                                    tempList.clear()
+                                    compList.clear()
 
-                                print("Event Start and End Time updated successfully!")
-                                tempList.clear()
-                                compList.clear()
+                                else:
+                                    database[eventINDEX][4] = tempList[4]
+                                    database[eventINDEX][5] = tempList[5]
+                                    print("Event Start and End Time updated successfully!")
+                                    tempList.clear()
+                                    compList.clear()
 
                             loop_Time = False
 
