@@ -12,9 +12,83 @@ def selectEvent(database):
             y= database.index(sub_list)
             return y
     print("Event not found!!!\n")
+
+'''Function to Check for event clashing and Time format
+Input:
+    - event: list with event format to be compared
+    - database: list of event-formatted lists to compare the list to
     
+Output:
+    - clashFlag: Boolean of clash or not'''
+def checkEventTime(event, database):
+    eventStartHour, eventStartMin = map(int, event[4].split(":"))
+    eventStart = eventStartHour*60 + eventStartMin
+    eventEndHour, eventEndMin = map(int, event[5].split(":"))
+    eventEnd = eventEndHour*60 + eventEndMin
+    
+    # Comparing the two lists for clashing of Date, Location and Time all at once
+    clashFlag = False
+    for event in database:
+        compStartHour, compStartMin = map(int, event[4].split(":"))
+        compStart = compStartHour*60 + compStartMin
+        compEndHour, compEndMin = map(int, event[5].split(":"))
+        compEnd = compEndHour*60 + compEndMin
+        if event[2:4] == event[2:4] and ((eventStart < compStart < eventEnd) or (compStart < eventStart < compEnd) or (eventStart == compStart)):
+            clashFlag = True
+            break
+    if eventEnd <= eventStart:
+        clashFlag = 'Invalid time'
+    return clashFlag
+
 # Register a new event
 def registerEvent(database):
+    new_name = input("Enter event name: ")
+    new_description = input("Enter event description: ")
+    new_location = input("Enter event location: ")
+
+    while True:
+        new_date = input("Enter the date (DD/MM/YY): ")
+        match = re.match(r"^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/([0-9][0-9])$", new_date)
+        if match:
+            new_date = match.group(0)
+            break
+        else:
+            print("Invalid Date. Please use the format DD/MM/YY")
+
+    while True:
+        new_start_time = input("Enter event start time in 24 hour format (HH:MM): ")
+        match = re.match(r"^(0[0-9]|1[0-9]|2[0-3])\:([0-5][0-9])$", new_start_time)
+        if match:
+            new_start_time = match.group(0)
+            break
+        else:
+            print("Invalid Time format. Please use the format HH:MM")
+
+    while True:
+        new_end_time = input("Enter event end time in 24 hour format (HH:MM): ")
+        match = re.match(r"^(0[0-9]|1[0-9]|2[0-3])\:([0-5][0-9])$", new_end_time)
+        if match:
+            new_end_time = match.group(0)
+            break
+        else:
+            print("Invalid Time format. Please use the format HH:MM")
+
+    new_event = [new_name, new_description, new_location, new_date, new_start_time, new_end_time, []]
+
+    clashFlag = checkEventTime(new_event, database)
+
+    if clashFlag == 'Invalid time':
+        print()
+    elif clashFlag == True:
+        print()
+        print("Clashing of Location, Date and Time with another existing event.")
+        print("Try again.")
+    else:
+        database.append(new_event)
+        print("Event added!")
+        print("Event:")
+        print(f"\nName: {new_name}\nDescription: {new_description}\nLocation: {new_location}\nDate: {new_date}\nStart Time: {new_start_time}\nEnd Time: {new_end_time}\n")
+    
     return database
 
 # Update existing event
@@ -75,33 +149,19 @@ def updateEvent(database):
                     tempList.extend(database[eventINDEX])
                     tempList[2] = updateEventLocation
 
-                    tempStartHour, tempStartMin = map(int, tempList[4].split(":"))
-                    tempStart = tempStartHour*60 + tempStartMin
-                    tempEndHour, tempEndMin = map(int, tempList[5].split(":"))
-                    tempEnd = tempEndHour*60 + tempEndMin
-
-                    # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this 2nd Temporary List (for comparison).
-                    compList = []
-                    compList.extend(database)
-                    del compList[eventINDEX]
+                    # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this Temporary List (for comparison).
+                    tempDatabase = []
+                    tempDatabase.extend(database)
+                    del tempDatabase[eventINDEX]
                     
                     # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
-                    clashFlag = False
-                    for event in range(len(compList)):
-                        compStartHour, compStartMin = map(int, compList[event][4].split(":"))
-                        compStart = compStartHour*60 + compStartMin
-                        compEndHour, compEndMin = map(int, compList[event][5].split(":"))
-                        compEnd = compEndHour*60 + compEndMin
-                        if tempList[2:4] == compList[event][2:4] and ((tempStart < compStart < tempEnd) or (compStart < tempStart < compEnd) or (tempStart == compStart)):
-                            print("Clashing of Location, Date and Time with another existing event.")
-                            print("Try again.")
-                            tempList.clear()
-                            compList.clear()
-                            clashFlag = True
-                            break
-                    if not clashFlag:
-                        tempList.clear()
-                        compList.clear()
+                    clashFlag = checkEventTime(tempList, tempDatabase)
+                    if clashFlag == True:
+                        print("Clashing of Location, Date and Time with another existing event.")
+                        print("Try again.")
+                    elif clashFlag == 'Invalid time':
+                        print("Invalid. End Time must come after Start Time.")
+                    else:
                         database[eventINDEX][2] = updateEventLocation
                         print(f"Event Location updated to '{updateEventLocation}' !")
                         loop_Location = False
@@ -113,41 +173,28 @@ def updateEvent(database):
                     updateEventDate = input("Enter a new date (DD/MM/YY): ")
                     match = re.match(r"^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/([0-9][0-9])$", updateEventDate)
                     if match:
+                        updateEventDate = match.group(0)
                             
                         # To extract, then, copy pasta that one selected "eventINDEX"'s event into this 1st Temporary List (for comparison) and update it based on user input.
                         tempList = []
                         tempList.extend(database[eventINDEX])
-                        tempList[3] = match.group(0)
+                        tempList[3] = updateEventDate
 
-                        tempStartHour, tempStartMin = map(int, tempList[4].split(":"))
-                        tempStart = tempStartHour*60 + tempStartMin
-                        tempEndHour, tempEndMin = map(int, tempList[5].split(":"))
-                        tempEnd = tempEndHour*60 + tempEndMin
-
-                        # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this 2nd Temporary List (for comparison).
-                        compList = []
-                        compList.extend(database)
-                        del compList[eventINDEX]
+                        # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this Temporary List (for comparison).
+                        tempDatabase = []
+                        tempDatabase.extend(database)
+                        del tempDatabase[eventINDEX]
                         
                         # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
-                        clashFlag = False
-                        for event in range(len(compList)):
-                            compStartHour, compStartMin = map(int, compList[event][4].split(":"))
-                            compStart = compStartHour*60 + compStartMin
-                            compEndHour, compEndMin = map(int, compList[event][5].split(":"))
-                            compEnd = compEndHour*60 + compEndMin
-                            if tempList[2:4] == compList[event][2:4] and ((tempStart < compStart < tempEnd) or (compStart < tempStart < compEnd) or (tempStart == compStart)):
-                                print("Clashing of Location, Date and Time with another existing event.")
-                                print("Try again.")
-                                tempList.clear()
-                                compList.clear()
-                                clashFlag = True
-                                break
-                        if not clashFlag:
-                            database[eventINDEX][3] = match.group(0)
-                            print(f"Event Date updated to '{match.group(0)}' !")
-                            tempList.clear()
-                            compList.clear()
+                        clashFlag = checkEventTime(tempList, tempDatabase)
+                        if clashFlag == True:
+                            print("Clashing of Location, Date and Time with another existing event.")
+                            print("Try again.")
+                        elif clashFlag == 'Invalid time':
+                            print("Invalid. End Time must come after Start Time.")
+                        else:
+                            database[eventINDEX][3] = updateEventDate
+                            print(f"Event Date updated to '{updateEventDate}' !")
                             loop_Date = False
                     else:
                         print("Invalid Date. Please use the format DD/MM/YY")
@@ -205,42 +252,22 @@ def updateEvent(database):
 
                         # 3. Go back
                         elif timeChoice == 3:
-                            tempStartHour, tempStartMin = map(int, tempList[4].split(":"))
-                            tempStart = tempStartHour*60 + tempStartMin
-                            tempEndHour, tempEndMin = map(int, tempList[5].split(":"))
-                            tempEnd = tempEndHour*60 + tempEndMin
-
-                            # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this 2nd Temporary List (for comparison).
-                            compList = []
-                            compList.extend(database)
-                            del compList[eventINDEX]
+                            # Copy Pasta everything in the database except the selected "eventINDEX"'s event into this Temporary List (for comparison).
+                            tempDatabase = []
+                            tempDatabase.extend(database)
+                            del tempDatabase[eventINDEX]
                             
                             # Comparing 1st and 2nd Temporary List for clashing of Date, Location and Time all at once
-                            clashFlag = False
-                            for event in range(len(compList)):
-                                compStartHour, compStartMin = map(int, compList[event][4].split(":"))
-                                compStart = compStartHour*60 + compStartMin
-                                compEndHour, compEndMin = map(int, compList[event][5].split(":"))
-                                compEnd = compEndHour*60 + compEndMin
-                                if tempList[2:4] == compList[event][2:4] and ((tempStart < compStart < tempEnd) or (compStart < tempStart < compEnd) or (tempStart == compStart)):
-                                    print("Clashing of Location, Date and Time with another existing event.")
-                                    print("Try again.")
-                                    tempList.clear()
-                                    compList.clear()
-                                    clashFlag = True
-                                    break
-                            if not clashFlag:
-                                if tempEnd <= tempStart:
-                                    print("Invalid. End Time must come after Start Time.")
-                                    tempList.clear()
-                                    compList.clear()
-
-                                else:
-                                    database[eventINDEX][4] = tempList[4]
-                                    database[eventINDEX][5] = tempList[5]
-                                    print("Event Start and End Time updated successfully!")
-                                    tempList.clear()
-                                    compList.clear()
+                            clashFlag = checkEventTime(tempList, tempDatabase)
+                            if clashFlag == True:
+                                print("Clashing of Location, Date and Time with another existing event.")
+                                print("Try again.")
+                            elif clashFlag == 'Invalid time':
+                                print("Invalid. End Time must come after Start Time.")
+                            else:
+                                database[eventINDEX][4] = tempList[4]
+                                database[eventINDEX][5] = tempList[5]
+                                print("Event Start and End Time updated successfully!")
 
                             loop_Time = False
 
@@ -251,7 +278,7 @@ def updateEvent(database):
                         print("Try again. Choose 1, 2 or 3 only.")
                         
             # 6. Back to Main Menu
-            elif updateChoice == 7:
+            elif updateChoice == 6:
                 print("Back to Main Menu......")
                 loop = False
 
@@ -444,14 +471,14 @@ def printEventDetails(database):
     if eventIndex == None:
         return
     event = database[eventIndex]
-    print('Name:',event[0])
+    print('Name       :',event[0])
     print('Description:',event[1])
-    print('Location:',event [2])
-    print('Date:',event[3])
-    print('StartTime:',event[4])
-    print('EndTime:',event[5])
+    print('Location   :',event [2])
+    print('Date       :',event[3])
+    print('Time Start :',event[4])
+    print('       End :',event[5])
     j = ", ".join(event[6])
-    print('Attendee:',j)
+    print('Attendee   :',j)
 
 
 
