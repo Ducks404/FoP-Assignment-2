@@ -417,7 +417,7 @@ def manageAttendees(database):
 
             # 4. Mark attendees' attendance
             elif choice == 4:
-                attendees = markAttendance(attendees)
+                attendees = mark_attendance(attendees)
 
             # 5. Export attendee into file
             elif choice == 5:
