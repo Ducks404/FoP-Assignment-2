@@ -2,13 +2,17 @@ import re
 
 # Prompts user to select an event
 def selectEvent(database):
-    nam=input('What is the name of the event?')
+    print()
+    for index, event in enumerate(database):
+        print(f'{index+1}. {event[0]}')
+    nam=input('What is the name of the event?\n')
+    print()
     for sub_list in database:
         if nam in sub_list:
             y= database.index(sub_list)
             return y
-    print("Event not found!!!")
-
+    print("Event not found!!!\n")
+    
 # Register a new event
 def registerEvent(database):
     return database
@@ -41,8 +45,7 @@ def updateEvent(database):
         print("    3. Event Location")
         print("    4. Event Date")
         print("    5. Event Time")
-        print("    6. Event Attendee's Name")
-        print("    7. Back to Main Menu")
+        print("    6. Back to Main Menu")
         print("◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉")
         updateChoice = input("Enter choice: ")
 
@@ -246,109 +249,8 @@ def updateEvent(database):
                     
                     else:
                         print("Try again. Choose 1, 2 or 3 only.")
-
-            # 6. Event Attendee's Name
-            elif updateChoice == 6:
-                loop_AttendeeName = True
-                while loop_AttendeeName:
-                    number = 1
-                    print()
-                    print("Attendees List:")
-                    for i in database[eventINDEX][6]:
-                        print(f"    {number}. {i}")
-                        number += 1
-                    
-                    print()
-                    print("What do you want to do?")
-                    print(" 1. Add Attendee")
-                    print(" 2. Delete Attendee")
-                    print(" 3. Change Attendee's Name")
-                    print(" 4. Go back")
-                    print()
-                    updateEventAttendeeName =input("Your choice: ")
-
-                    if updateEventAttendeeName.isdigit():
-                        updateEventAttendeeName = int(updateEventAttendeeName)
-
-                        # 1. Add Attendee
-                        if updateEventAttendeeName == 1:
-                            addName = input("Who to add? (ENTER NAME): ")
-                            database[eventINDEX][6].append(addName)
-                            print("Attendee Name added!")
-
-                        # 2. Delete Attendee
-                        elif updateEventAttendeeName == 2:
-                            loop_deleteAttendee = True
-                            while loop_deleteAttendee:
-                                deleteName = input("Who do you wish to delete? (ENTER NUMBER): ")
-
-                                if deleteName.isdigit():
-                                    deleteName = int(deleteName)
-
-                                    if deleteName <= 0:
-                                        print("Try again.")
-
-                                    elif deleteName <= len(database[eventINDEX][6]):
-
-                                        # Confirmation
-                                        loop_ConfirmProceed = True
-                                        while loop_ConfirmProceed:
-                                            print()
-                                            confirmProceed = input("Are you sure? (Y or N) : ")
-                                            confirmProceed = confirmProceed.upper()
-
-                                            if confirmProceed == "Y":
-                                                database[eventINDEX][6].pop(deleteName - 1)
-                                                print("Attendee Name deleted!")
-                                                loop_ConfirmProceed = False
-                                            
-                                            elif confirmProceed == "N":
-                                                loop_ConfirmProceed = False
-
-                                            else:
-                                                print("Enter 'Y' or 'N' only. Try again.")
-
-                                        loop_deleteAttendee = False
-
-                                    else:
-                                        print("Try again.")
-                                    
-                                else:
-                                    print("Please try again.")
-
-                        # 3. Change Attendee's Name
-                        elif updateEventAttendeeName == 3:
-                            changeName = input("Which Attendee do you wish to change? (ENTER NUMBER) : ")
-
-                            if changeName.isdigit():
-                                changeName = int(changeName)
-
-                                if changeName <= 0:
-                                    print("Try again.")
-                                
-                                elif changeName <= len(database[eventINDEX][6]):
-                                    print()
-                                    newlyChangedName = input(f"Change '{database[eventINDEX][6][changeName - 1]}' to? (ENTER NAME): ")
-                                    database[eventINDEX][6][changeName - 1] = newlyChangedName
-                                    print("Attendee Name changed!")
-
-                                else:
-                                    print("Try again.")
                         
-                            else:
-                                print("Numbers only. Try again.")
-
-                            # 4. Go back
-                        elif updateEventAttendeeName == 4:
-                            loop_AttendeeName = False
-
-                        else:
-                            print("Invalid. Please try again.")
-
-                    else:
-                        print("Invalid options. Please try again.")
-
-            # 7. Back to Main Menu
+            # 6. Back to Main Menu
             elif updateChoice == 7:
                 print("Back to Main Menu......")
                 loop = False
@@ -363,20 +265,194 @@ def updateEvent(database):
 
 # Delete existing event
 def deleteEvent(database):
-    printSchedule(database)
     delegroup= selectEvent(database)
+    if delegroup == None:
+        return
     del database[delegroup]
     print("Event succcessfully deleted :)")
     return database
 
+
+import csv
+#helper function for export,called later
+def exportAttendees(attendees, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Attendee Name"])
+        for attendee in attendees:
+            writer.writerow([attendee])
+    print("Attendee list exported successfully!")
+
+#Marking attendees system  
+#updated logic to test
+def mark_attendance(attendees):
+    """
+    Marks attendance for attendees in a list.
+
+    Args:
+        attendees (list): A list of dictionaries containing attendee information.
+            Each dictionary should have 'name' (string) and 'status' (string) keys.
+
+    Returns:
+        tuple: A tuple containing two elements:
+            1. Updated attendees list (list): The original list with attendance statuses updated.
+            2. Marked attendees list (list): A list of names of attendees whose attendance was marked.
+    """
+
+    if not attendees:
+        print("There are no attendees in the list.")
+        return attendees, []  # Return empty list for marked attendees
+
+    print("List of Attendees:")
+    for i, attendee in enumerate(attendees):
+        status = 'Attended' if attendee['status'].upper() == 'Y' else 'Not Attended'
+        print(f"{i+1}. {attendee['name']} ({status})")
+
+    marked_attendees = []
+    while True:
+        name_to_mark = input("Enter attendee name to mark attendance (or 'q' to quit): ").strip()
+        if name_to_mark.lower() == 'q':
+            break
+
+        for attendee in attendees:
+            if attendee['name'].lower() == name_to_mark.lower():
+                if attendee['status'].upper() != 'Y':
+                    attendee['status'] = 'Y'
+                    marked_attendees.append(attendee['name'])
+                    print(f"Attendance for {attendee['name']} has been marked successfully!")
+                else:
+                    print(f"{attendee['name']} is already marked as attended.")
+                break
+        else:  # This else corresponds to the for loop
+            print(f"Attendee '{name_to_mark}' not found. Please try again or enter 'q' to quit.")
+
+    print("Updated List of Attendees:")
+    for i, attendee in enumerate(attendees):
+        status = 'Attended' if attendee['status'].upper() == 'Y' else 'Not Attended'
+        print(f"{i+1}. {attendee['name']} ({status})")
+
+    return attendees, marked_attendees
+#helper function for search        
+def searchAttendees(attendees):
+    search_term = input("Enter attendee name to search: ")
+    search_results = [attendee for attendee in attendees if search_term.lower() in attendee.lower()]
+
+    if search_results:
+        print("Search Results:")
+        for i, attendee in enumerate(search_results):
+            print(f"{i+1}. {attendee}")
+    else:
+        print("No attendees found matching the search term.")
 # Manage attendees menu
 def manageAttendees(database):
-    pass
+     eventIndex = selectEvent(database)
+     attendees = database[eventIndex][6]
+
+     while True:
+        print("\nAttendee Management for:", database[eventIndex][0])
+        print("1. Add Attendee")
+        print("2. Remove Attendee")
+        print("3. Search Attendees")
+        print("4. Mark Attendance")
+        print("5. Export Attendee List")
+        print("6. Back to Main Menu")
+        choice = input("Enter choice: ")
+
+        if choice.isdigit():
+            choice = int(choice)
+
+            # 1. Add Attendee
+            if choice == 1:
+                addName = input("Who to add? (ENTER NAME): ")
+                attendees.append(addName)
+                print("Attendee Name added!")
+
+            # 2. Delete Attendee
+            elif choice == 2:
+                print()
+                print("Attendees List:")
+                for index, attendee in enumerate(attendees):
+                    print(f"    {index+1}. {attendee}")
+                loop_deleteAttendee = True
+                while loop_deleteAttendee:
+                    deleteName = input("Who do you wish to delete? (ENTER NUMBER): ")
+
+                    if deleteName.isdigit():
+                        deleteName = int(deleteName)
+
+                        if deleteName <= 0:
+                            print("Try again.")
+
+                        elif deleteName <= len(attendees):
+
+                            # Confirmation
+                            loop_ConfirmProceed = True
+                            while loop_ConfirmProceed:
+                                print()
+                                confirmProceed = input("Are you sure? (Y or N) : ")
+                                confirmProceed = confirmProceed.upper()
+
+                                if confirmProceed == "Y":
+                                    attendees.pop(deleteName - 1)
+                                    print("Attendee Name deleted!")
+                                    loop_ConfirmProceed = False
+                                
+                                elif confirmProceed == "N":
+                                    loop_ConfirmProceed = False
+
+                                else:
+                                    print("Enter 'Y' or 'N' only. Try again.")
+
+                            loop_deleteAttendee = False
+
+                        else:
+                            print("Try again.")
+                        
+                    else:
+                        print("Please try again.")
+
+            # 3. Search for an attendee
+            elif choice == 3:
+                searchAttendees(attendees.copy())  # Pass a copy to avoid modifying original list
+
+            # 4. Mark attendees' attendance
+            elif choice == 4:
+                attendees = markAttendance(attendees)
+
+            # 5. Export attendee into file
+            elif choice == 5:
+                filename = input("Enter filename for export (e.g., attendees.csv): ")
+                exportAttendees(attendees.copy(), filename)  # Pass a copy to avoid modifying original list
+            
+            # 6. Go back
+            elif choice == 6:
+                break
+
+            else:
+                print("Invalid choice. Please try again.")
+
+        else:
+            print("Invalid input. Please enter digits only.")
+
+     database[eventIndex][6] = attendees
+     return database
+
 
 # Prints event schedule:
-def printSchedule(database):
-    print(database)
-    pass
+def printEventDetails(database):
+    eventIndex = selectEvent(database)
+    if eventIndex == None:
+        return
+    event = database[eventIndex]
+    print('Name:',event[0])
+    print('Description:',event[1])
+    print('Location:',event [2])
+    print('Date:',event[3])
+    print('StartTime:',event[4])
+    print('EndTime:',event[5])
+    j = ", ".join(event[6])
+    print('Attendee:',j)
+
 
 
 
@@ -399,7 +475,7 @@ while True:
     2. Update an existing event
     3. Delete an existing event
     4. Manage attendees for an existing event
-    5. Print event schedule
+    5. Print event details
     6. Exit''')
     choice = input('Enter choice: ')
     if choice == '1':
@@ -411,7 +487,7 @@ while True:
     elif choice == '4':
         database = manageAttendees(database)
     elif choice == '5':
-        printSchedule(database)
+        printEventDetails(database)
     elif choice =='6':
         break
     else:
