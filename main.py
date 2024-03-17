@@ -5,10 +5,10 @@ def selectEvent(database):
     print()
     for index, event in enumerate(database):
         print(f'{index+1}. {event[0]}')
-    nam=input('What is the name of the event?\n')
+    nam=input('What is the name of the event? (case sensitive)\n').lower()
     print()
     for sub_list in database:
-        if nam in sub_list:
+        if nam == sub_list[0].lower():
             y= database.index(sub_list)
             return y
     print("Event not found!!!\n")
@@ -42,7 +42,17 @@ def checkEventTime(event, database):
 
 # Register a new event
 def registerEvent(database):
-    new_name = input("Enter event name: ")
+    while True:
+        validName = True
+        new_name = input("Enter event name: ")
+        for event in database:
+            if new_name.lower() == event[0].lower():
+                print('Name already taken')
+                validName = False
+                break
+        if validName:
+            break
+
     new_description = input("Enter event description: ")
     new_location = input("Enter event location: ")
 
@@ -128,10 +138,19 @@ def updateEvent(database):
             
             # 1. Event Name
             if updateChoice == 1:
-                updateEventName = input("Enter a new event name: ")
+                while True:
+                    validName = True
+                    updateEventName = input("Enter a new event name: ")
+                    for event in database:
+                        if updateEventName.lower() == event[0].lower():
+                            print('Name already taken')
+                            validName = False
+                            break
+                    if validName:
+                        break
+                    
                 database[eventINDEX][0] = updateEventName
                 print("Event Name updated!")
-
             # 2. Event Description    
             elif updateChoice == 2:
                 updateEventDescription = input("Enter a new event description: ")
