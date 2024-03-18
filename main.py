@@ -43,14 +43,16 @@ def checkEventTime(event, database):
 
 # Register a new event
 def registerEvent(database):
-    validName = True
-    while validName:
+    while True:
+        validName = True
         new_name = input("Enter event name: ")
         for event in database:
             if new_name.lower() == event[0].lower():
                 print('Name already taken')
                 validName = False
                 break
+        if validName:
+            break
 
     new_description = input("Enter event description: ")
     new_location = input("Enter event location: ")
@@ -321,7 +323,7 @@ def updateEvent(database):
 def deleteEvent(database):
     delegroup= selectEvent(database)
     if delegroup == None:
-        return
+        return database
     del database[delegroup]
     print("Event succcessfully deleted :)")
     input('Press Enter to continue...')
@@ -401,10 +403,12 @@ def searchAttendees(attendees):
         print("No attendees found matching the search term.")
 # Manage attendees menu
 def manageAttendees(database):
-     eventIndex = selectEvent(database)
-     attendees = database[eventIndex][6]
+    eventIndex = selectEvent(database)
+    if eventIndex == None:
+        return database
+    attendees = database[eventIndex][6]
 
-     while True:
+    while True:
         print("\nAttendee Management for:", database[eventIndex][0])
         print("1. Add Attendee")
         print("2. Remove Attendee")
@@ -492,8 +496,8 @@ def manageAttendees(database):
 
         input('Press Enter to continue...')
 
-     database[eventIndex][6] = attendees
-     return database
+    database[eventIndex][6] = attendees
+    return database
 
 
 # Prints event schedule:
@@ -547,6 +551,7 @@ while True:
     elif choice == '5':
         printEventDetails(database)
     elif choice =='6':
+        print('Thank you, have a good day! :)')
         break
     else:
         print('Error: Invalid choice')
