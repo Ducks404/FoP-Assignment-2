@@ -342,54 +342,29 @@ def exportAttendees(attendees, filename):
     input('Press Enter to continue...')
 
 #Marking attendees system  
-#updated logic to test
+#Bismillah
+#Simplified but works
 def mark_attendance(attendees):
-    """
-    Marks attendance for attendees in a list.
+  """
+  This function allows marking attendance for each attendee.
 
-    Args:
-        attendees (list): A list of dictionaries containing attendee information.
-            Each dictionary should have 'name' (string) and 'status' (string) keys.
+  Args:
+      attendees: A list containing attendee names.
 
-    Returns:
-        tuple: A tuple containing two elements:
-            1. Updated attendees list (list): The original list with attendance statuses updated.
-            2. Marked attendees list (list): A list of names of attendees whose attendance was marked.
-    """
+  Returns:
+      A modified list of attendees with attendance status (present/absent).
+  """
+  for index, attendee in enumerate(attendees):
+    print(f"{index+1}. {attendee}")
+    status = input(f"Mark '{attendee}' as (P)resent or (A)bsent: ").upper()
+    if status == "P":
+      attendees[index] = f"{attendee} (Present)"
+    elif status == "A":
+      attendees[index] = f"{attendee} (Absent)"
+    else:
+      print("Invalid input. Please enter 'P' or 'A'.")
+  return attendees
 
-    if not attendees:
-        print("There are no attendees in the list.")
-        return attendees, []  # Return empty list for marked attendees
-
-    print("List of Attendees:")
-    for i, attendee in enumerate(attendees):
-        status = 'Attended' if attendee['status'].upper() == 'Y' else 'Not Attended'
-        print(f"{i+1}. {attendee['name']} ({status})")
-
-    marked_attendees = []
-    while True:
-        name_to_mark = input("Enter attendee name to mark attendance (or 'q' to quit): ").strip()
-        if name_to_mark.lower() == 'q':
-            break
-
-        for attendee in attendees:
-            if attendee['name'].lower() == name_to_mark.lower():
-                if attendee['status'].upper() != 'Y':
-                    attendee['status'] = 'Y'
-                    marked_attendees.append(attendee['name'])
-                    print(f"Attendance for {attendee['name']} has been marked successfully!")
-                else:
-                    print(f"{attendee['name']} is already marked as attended.")
-                break
-        else:  # This else corresponds to the for loop
-            print(f"Attendee '{name_to_mark}' not found. Please try again or enter 'q' to quit.")
-
-    print("Updated List of Attendees:")
-    for i, attendee in enumerate(attendees):
-        status = 'Attended' if attendee['status'].upper() == 'Y' else 'Not Attended'
-        print(f"{i+1}. {attendee['name']} ({status})")
-
-    return attendees, marked_attendees
 #helper function for search        
 def searchAttendees(attendees):
     search_term = input("Enter attendee name to search: ")
