@@ -342,40 +342,29 @@ def exportAttendees(attendees, filename):
     input('Press Enter to continue...')
 
 #Marking attendees system  
-#updated logic to test
+#Bismillah
+#Simplified but works
 def mark_attendance(attendees):
-    if not attendees:
-        print("There are no attendees in the list.")
-        return attendees
+  """
+  This function allows marking attendance for each attendee.
 
-    print("List of Attendees:")
-    for i, attendee in enumerate(attendees, 1):
-        print(f"{i}. {attendee[0]} ({'Attended' if attendee[1].upper() == 'Y' else 'Not Attended'})")
+  Args:
+      attendees: A list containing attendee names.
 
-    while True:
-        name_to_mark = input("Enter attendee name to mark attendance (or 'q' to quit): ").strip()
-        if name_to_mark.lower() == 'q':
-            break
+  Returns:
+      A modified list of attendees with attendance status (present/absent).
+  """
+  for index, attendee in enumerate(attendees):
+    print(f"{index+1}. {attendee}")
+    status = input(f"Mark '{attendee}' as (P)resent or (A)bsent: ").upper()
+    if status == "P":
+      attendees[index] = f"{attendee} (Present)"
+    elif status == "A":
+      attendees[index] = f"{attendee} (Absent)"
+    else:
+      print("Invalid input. Please enter 'P' or 'A'.")
+  return attendees
 
-        found = False
-        for attendee in attendees:
-            if attendee[0].strip().lower() == name_to_mark.lower():
-                found = True
-                if attendee[1].upper() != 'Y':
-                    attendee[1] = 'Y'
-                    print(f"Attendance for {attendee[0]} has been marked successfully!")
-                else:
-                    print(f"{attendee[0]} is already marked as attended.")
-                break
-
-        if not found:
-            print(f"Attendee '{name_to_mark}' not found. Please try again or enter 'q' to quit.")
-
-    print("Updated List of Attendees:")
-    for i, attendee in enumerate(attendees, 1):
-        print(f"{i}. {attendee[0]} ({'Attended' if attendee[1].upper() == 'Y' else 'Not Attended'})")
-
-    return attendees
 #helper function for search        
 def searchAttendees(attendees):
     search_term = input("Enter attendee name to search: ")
