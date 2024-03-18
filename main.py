@@ -5,13 +5,14 @@ def selectEvent(database):
     print()
     for index, event in enumerate(database):
         print(f'{index+1}. {event[0]}')
-    nam=input('What is the name of the event? (case sensitive)\n').lower()
+    nam=input('What is the name of the event?\n').lower()
     print()
     for sub_list in database:
         if nam == sub_list[0].lower():
             y= database.index(sub_list)
             return y
     print("Event not found!!!\n")
+    input('Press Enter to continue...')
 
 '''Function to Check for event clashing and Time format
 Input:
@@ -28,12 +29,12 @@ def checkEventTime(event, database):
     
     # Comparing the two lists for clashing of Date, Location and Time all at once
     clashFlag = False
-    for event in database:
-        compStartHour, compStartMin = map(int, event[4].split(":"))
+    for compEvent in database:
+        compStartHour, compStartMin = map(int, compEvent[4].split(":"))
         compStart = compStartHour*60 + compStartMin
-        compEndHour, compEndMin = map(int, event[5].split(":"))
+        compEndHour, compEndMin = map(int, compEvent[5].split(":"))
         compEnd = compEndHour*60 + compEndMin
-        if event[2:4] == event[2:4] and ((eventStart < compStart < eventEnd) or (compStart < eventStart < compEnd) or (eventStart == compStart)):
+        if event[2:4] == compEvent[2:4] and ((eventStart < compStart < eventEnd) or (compStart < eventStart < compEnd) or (eventStart == compStart)):
             clashFlag = True
             break
     if eventEnd <= eventStart:
@@ -42,16 +43,14 @@ def checkEventTime(event, database):
 
 # Register a new event
 def registerEvent(database):
-    while True:
-        validName = True
+    validName = True
+    while validName:
         new_name = input("Enter event name: ")
         for event in database:
             if new_name.lower() == event[0].lower():
                 print('Name already taken')
                 validName = False
                 break
-        if validName:
-            break
 
     new_description = input("Enter event description: ")
     new_location = input("Enter event location: ")
@@ -88,7 +87,7 @@ def registerEvent(database):
     clashFlag = checkEventTime(new_event, database)
 
     if clashFlag == 'Invalid time':
-        print()
+        print('Invalid. End time must come after start time.')
     elif clashFlag == True:
         print()
         print("Clashing of Location, Date and Time with another existing event.")
@@ -97,8 +96,15 @@ def registerEvent(database):
         database.append(new_event)
         print("Event added!")
         print("Event:")
-        print(f"\nName: {new_name}\nDescription: {new_description}\nLocation: {new_location}\nDate: {new_date}\nStart Time: {new_start_time}\nEnd Time: {new_end_time}\n")
-    
+        print(f"\n\
+Name       : {new_name}\n\
+Description: {new_description}\n\
+Location   : {new_location}\n\
+Date       : {new_date}\n\
+Start Time : {new_start_time}\n\
+End Time   : {new_end_time}\n")
+
+    input('Press Enter to continue...')
     return database
 
 # Update existing event
@@ -148,9 +154,10 @@ def updateEvent(database):
                             break
                     if validName:
                         break
-                    
+
                 database[eventINDEX][0] = updateEventName
                 print("Event Name updated!")
+
             # 2. Event Description    
             elif updateChoice == 2:
                 updateEventDescription = input("Enter a new event description: ")
@@ -303,9 +310,10 @@ def updateEvent(database):
 
             else:
                 print("Enter valid options only. Try again.")
-        
+
         else:
             print("Please try again. Enter digits only.")
+        input('Press Enter to continue...')
 
     return database
 
@@ -316,6 +324,7 @@ def deleteEvent(database):
         return
     del database[delegroup]
     print("Event succcessfully deleted :)")
+    input('Press Enter to continue...')
     return database
 
 
@@ -328,6 +337,7 @@ def exportAttendees(attendees, filename):
         for attendee in attendees:
             writer.writerow([attendee])
     print("Attendee list exported successfully!")
+    input('Press Enter to continue...')
 
 #Marking attendees system  
 #updated logic to test
@@ -480,6 +490,8 @@ def manageAttendees(database):
         else:
             print("Invalid input. Please enter digits only.")
 
+        input('Press Enter to continue...')
+
      database[eventIndex][6] = attendees
      return database
 
@@ -498,7 +510,7 @@ def printEventDetails(database):
     print('       End :',event[5])
     j = ", ".join(event[6])
     print('Attendee   :',j)
-
+    input('Press Enter to continue...')
 
 
 
