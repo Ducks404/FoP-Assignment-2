@@ -331,7 +331,7 @@ def deleteEvent(database):
 
 
 import csv
-#helper function for export,called later
+# Helper function for export,called later
 def exportAttendees(attendees, filename):
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
@@ -339,11 +339,8 @@ def exportAttendees(attendees, filename):
         for attendee in attendees:
             writer.writerow([attendee])
     print("Attendee list exported successfully!")
-    input('Press Enter to continue...')
 
-#Marking attendees system  
-#Bismillah
-#Simplified but works
+# Marking attendees system 
 def mark_attendance(attendees):
   """
   This function allows marking attendance for each attendee.
@@ -355,6 +352,10 @@ def mark_attendance(attendees):
       A modified list of attendees with attendance status (present/absent).
   """
   for index, attendee in enumerate(attendees):
+    hasStatus = True if attendee.endswith('sent)') else False
+    if hasStatus:
+        attendee = ' '.join(attendee.split()[:-1])
+
     print(f"{index+1}. {attendee}")
     status = input(f"Mark '{attendee}' as (P)resent or (A)bsent: ").upper()
     if status == "P":
@@ -365,7 +366,7 @@ def mark_attendance(attendees):
       print("Invalid input. Please enter 'P' or 'A'.")
   return attendees
 
-#helper function for search        
+# Helper function for search        
 def searchAttendees(attendees):
     search_term = input("Enter attendee name to search: ")
     search_results = [attendee for attendee in attendees if search_term.lower() in attendee.lower()]
@@ -419,27 +420,10 @@ def manageAttendees(database):
                             print("Try again.")
 
                         elif deleteName <= len(attendees):
-
-                            # Confirmation
-                            loop_ConfirmProceed = True
-                            while loop_ConfirmProceed:
-                                print()
-                                confirmProceed = input("Are you sure? (Y or N) : ")
-                                confirmProceed = confirmProceed.upper()
-
-                                if confirmProceed == "Y":
-                                    attendees.pop(deleteName - 1)
-                                    print("Attendee Name deleted!")
-                                    loop_ConfirmProceed = False
-                                
-                                elif confirmProceed == "N":
-                                    loop_ConfirmProceed = False
-
-                                else:
-                                    print("Enter 'Y' or 'N' only. Try again.")
-
+                            print()
+                            attendees.pop(deleteName - 1)
+                            print("Attendee Name deleted!")
                             loop_deleteAttendee = False
-
                         else:
                             print("Try again.")
                         
